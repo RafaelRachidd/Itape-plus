@@ -1,0 +1,20 @@
+# Dependências
+node_modules/
+ 
+# Variáveis de ambiente (nunca commitar)
+.env
+.env.local
+ 
+# Build do front-end
+dist/
+build/
+ 
+# Logs
+npm-debug.log*
+logs/
+*.log
+ 
+# Sistema e editor
+.DS_Store
+Thumbs.db
+.vscode/
