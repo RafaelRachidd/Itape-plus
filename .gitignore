@@ -22,3 +22,6 @@ logs/
 .DS_Store
 Thumbs.db
 .vscode/
+# Firebase - credenciais privadas
+backend/serviceAccountKey.json
+backend/serviceAccountKey.json.json/firebase cod.txt
