@@ -1,19 +1,23 @@
-# Dependências
+# Dependencias
 node_modules/
- 
-# Variáveis de ambiente (nunca commitar)
+
+# Variaveis de ambiente (nunca commitar)
 .env
 .env.local
- 
+
+# Chaves privadas Firebase Admin SDK (nunca commitar)
+**/serviceAccountKey.json
+**/*-firebase-adminsdk-*.json
+
 # Build do front-end
 dist/
 build/
- 
+
 # Logs
 npm-debug.log*
 logs/
 *.log
- 
+
 # Sistema e editor
 .DS_Store
 Thumbs.db
