@@ -1,0 +1,53 @@
+/* Estilos base do Itape +. Paleta suave; ajustar quando o protótipo do Figma ficar pronto. */
+:root {
+  --cor-fundo: #f7f5f2;
+  --cor-superficie: #ffffff;
+  --cor-texto: #2f2b28;
+  --cor-texto-suave: #6b645e;
+  --cor-primaria: #7a5c8f;
+  --cor-primaria-clara: #ece4f1;
+  --cor-borda: #e4dfd8;
+  --raio: 10px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+  line-height: 1.5;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+#root { flex: 1; display: flex; flex-direction: column; }
+main { flex: 1; width: 100%; max-width: 1100px; margin: 0 auto; padding: 32px 16px; }
+a { color: var(--cor-primaria); }
+a:focus-visible { outline: 2px solid var(--cor-primaria); outline-offset: 2px; }
+
+.cabecalho {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  align-items: center; justify-content: space-between;
+  padding: 14px 16px; background: var(--cor-superficie);
+  border-bottom: 1px solid var(--cor-borda);
+}
+.logo { font-size: 1.5rem; font-weight: 700; text-decoration: none; color: var(--cor-texto); }
+.logo span { color: var(--cor-primaria); }
+.cabecalho nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.cabecalho nav a { text-decoration: none; color: var(--cor-texto-suave); }
+.cabecalho nav a.active { color: var(--cor-primaria); font-weight: 600; }
+.cabecalho nav a.botao-secundario {
+  padding: 6px 14px; border-radius: var(--raio);
+  background: var(--cor-primaria-clara); color: var(--cor-primaria);
+}
+
+.destaque { text-align: center; padding: 48px 0; }
+.destaque h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); margin: 0 0 8px; }
+.destaque p { color: var(--cor-texto-suave); margin: 0; }
+
+.status {
+  display: inline-block; margin-top: 28px; padding: 10px 16px;
+  border: 1px solid var(--cor-borda); border-radius: var(--raio);
+  background: var(--cor-superficie); color: var(--cor-texto-suave); font-size: 0.95rem;
+}
+
+.rodape {
+  text-align: center; padding: 20px 16px; font-size: 0.85rem;
+  color: var(--cor-texto-suave); border-top: 1px solid var(--cor-borda);
+}
