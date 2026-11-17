@@ -5,6 +5,22 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e
 
 ## [Não lançado]
 
+### Adicionado (moderação, parte da v0.4.0)
+- Rotas `GET /api/admin/resumo`, `GET /api/admin/eventos?status=` e `PATCH /api/admin/eventos/:id/aprovar` e `/rejeitar` (RF11–RF13)
+- Tela de moderação com abas Pendentes, Aprovados e Rejeitados, detalhes do evento e motivo obrigatório com sugestões rápidas
+- Só eventos pendentes podem ser moderados (evita aprovar algo que acabou de ser editado)
+
+## [0.3.0] - Cadastro, login e painel do organizador
+
+### Adicionado
+- Rotas `POST /api/auth/cadastro`, `POST /api/auth/login` e `GET /api/auth/eu`, com JWT (8 horas) e senha em bcryptjs (RF06, RF07, RNF02)
+- Middlewares `autenticar` (401) e `exigirPerfil` (403) (RNF03)
+- CRUD em `/api/painel/eventos`: todo evento nasce pendente, edição devolve para pendente e só o dono altera ou exclui (RF08–RF10, RN01, RN05, RN06)
+- `GET` e `PUT /api/painel/perfil` com nome público, descrição e contato (RF16)
+- Telas de cadastro (com aviso LGPD), login, painel com resumo e status, formulário de evento e perfil com prévia
+- Rotas protegidas no front-end e encerramento automático da sessão quando o token vence
+
+
 ## [0.2.0] - Catálogo público
 
 ### Adicionado
