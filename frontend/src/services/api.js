@@ -22,3 +22,8 @@ export async function requisitar(caminho, opcoes = {}) {
 }
 
 export const verificarApi = () => requisitar('/health');
+
+export const listarEventos = () => requisitar('/eventos');
+
+export const buscarEventoPorId = (id) =>
+  requisitar(`/eventos/${encodeURIComponent(id)}`);
