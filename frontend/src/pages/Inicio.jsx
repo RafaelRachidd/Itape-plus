@@ -1,27 +1,38 @@
 import { useEffect, useState } from 'react';
-import { verificarApi } from '../services/api';
+import { Link } from 'react-router-dom';
+import { listarProximosEventos } from '../services/api';
+import ListaEventos from '../components/ListaEventos';
 
-// Página inicial. Na v0.1.0 mostra só a conexão com a API;
-// a lista dos próximos eventos (RF01) entra na v0.2.0.
+// RF01: próximos eventos aprovados, do mais próximo ao mais distante.
 export default function Inicio() {
-  const [status, setStatus] = useState({ carregando: true });
+  const [eventos, setEventos] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState('');
 
   useEffect(() => {
-    verificarApi()
-      .then((dados) => setStatus({ ok: true, dados }))
-      .catch((erro) => setStatus({ ok: false, mensagem: erro.message }));
+    listarProximosEventos(6)
+      .then(setEventos)
+      .catch((e) => setErro(e.message))
+      .finally(() => setCarregando(false));
   }, []);
 
   return (
-    <section className="destaque">
-      <h1>A cultura da nossa região em um só lugar</h1>
-      <p>Eventos culturais e educacionais de Itapetininga e região.</p>
+    <>
+      <section className="destaque">
+        <h1>A cultura da nossa região em um só lugar</h1>
+        <p>Eventos culturais e educacionais de Itapetininga e região.</p>
+        <Link to="/eventos" className="botao">Ver todos os eventos</Link>
+      </section>
 
-      <div className="status" role="status">
-        {status.carregando && 'Verificando a conexão com a API...'}
-        {status.ok && `API conectada: ${status.dados.categorias} categorias no banco.`}
-        {status.ok === false && `API indisponível: ${status.mensagem}`}
-      </div>
-    </section>
+      <section aria-labelledby="titulo-proximos">
+        <h2 id="titulo-proximos" className="titulo-secao">Próximos eventos</h2>
+        <ListaEventos
+          eventos={eventos}
+          carregando={carregando}
+          erro={erro}
+          vazio="Nenhum evento programado no momento."
+        />
+      </section>
+    </>
   );
 }

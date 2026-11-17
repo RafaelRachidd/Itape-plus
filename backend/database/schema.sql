@@ -2,6 +2,9 @@
 -- Executar com: npm run db:schema
 -- ATENÇÃO: apaga e recria as tabelas (use apenas em desenvolvimento).
 
+-- Busca sem diferenciar acentos ("estacoes" encontra "Estações").
+CREATE EXTENSION IF NOT EXISTS unaccent;
+
 DROP TABLE IF EXISTS eventos;
 DROP TABLE IF EXISTS categorias;
 DROP TABLE IF EXISTS usuarios;

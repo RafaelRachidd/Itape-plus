@@ -62,6 +62,16 @@ npm run dev        # site em http://localhost:5173
 
 A página inicial mostra "API conectada" quando o back-end está rodando.
 
+## Rotas da API
+
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/api/health` | Verifica a API e o banco |
+| GET | `/api/categorias` | Lista as categorias |
+| GET | `/api/eventos/proximos?limite=6` | Próximos eventos aprovados |
+| GET | `/api/eventos?busca=&categoria=&dataInicio=&dataFim=&gratuito=true` | Catálogo com busca e filtros |
+| GET | `/api/eventos/:id` | Detalhes de um evento aprovado |
+
 ## Dados de exemplo
 
 O `npm run db:reset` cria:

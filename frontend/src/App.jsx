@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import Cabecalho from './components/Cabecalho';
 import Inicio from './pages/Inicio';
+import Eventos from './pages/Eventos';
+import DetalhesEvento from './pages/DetalhesEvento';
 import EmConstrucao from './pages/EmConstrucao';
 
 // Rotas do MVP. As páginas provisórias serão trocadas a cada versão.
@@ -11,8 +13,8 @@ export default function App() {
       <main>
         <Routes>
           <Route path="/" element={<Inicio />} />
-          <Route path="/eventos" element={<EmConstrucao titulo="Eventos" versao="v0.2.0" />} />
-          <Route path="/eventos/:id" element={<EmConstrucao titulo="Detalhes do evento" versao="v0.2.0" />} />
+          <Route path="/eventos" element={<Eventos />} />
+          <Route path="/eventos/:id" element={<DetalhesEvento />} />
           <Route path="/cadastro" element={<EmConstrucao titulo="Criar conta de organizador" versao="v0.3.0" />} />
           <Route path="/login" element={<EmConstrucao titulo="Entrar" versao="v0.3.0" />} />
           <Route path="/painel" element={<EmConstrucao titulo="Painel do organizador" versao="v0.3.0" />} />

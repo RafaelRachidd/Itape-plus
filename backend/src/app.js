@@ -20,11 +20,19 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// As rotas de /api/eventos, /api/auth e /api/admin entram nas próximas etapas.
+// Catálogo público (v0.2.0). /api/auth e /api/admin entram nas próximas versões.
+app.use('/api/categorias', require('./routes/categoriaRoutes'));
+app.use('/api/eventos', require('./routes/eventoRoutes'));
 
 // Rota inexistente.
 app.use((req, res) => {
   res.status(404).json({ mensagem: 'Rota não encontrada' });
+});
+
+// Erro inesperado: registra no terminal e devolve mensagem genérica (sem expor detalhes do banco).
+app.use((erro, req, res, next) => {
+  console.error(erro);
+  res.status(500).json({ mensagem: 'Erro interno. Tente novamente em instantes.' });
 });
 
 module.exports = app;

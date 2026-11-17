@@ -1,15 +1,28 @@
-import { NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
+// "Cursos e oficinas" é o catálogo filtrado pela categoria Educação.
 export default function Cabecalho() {
+  const { pathname, search } = useLocation();
+  const emEducacao = pathname === '/eventos' && new URLSearchParams(search).get('categoria') === 'educacao';
+  const emEventos = pathname.startsWith('/eventos') && !emEducacao;
+
   return (
     <header className="cabecalho">
-      <NavLink to="/" className="logo">
+      <Link to="/" className="logo" aria-label="Itape +, página inicial">
         Itape <span>+</span>
-      </NavLink>
+      </Link>
       <nav aria-label="Menu principal">
-        <NavLink to="/eventos">Eventos</NavLink>
-        <NavLink to="/eventos?categoria=educacao">Cursos e oficinas</NavLink>
-        <NavLink to="/login" className="botao-secundario">Área do organizador</NavLink>
+        <Link to="/eventos" className={emEventos ? 'ativo' : ''} aria-current={emEventos ? 'page' : undefined}>
+          Eventos
+        </Link>
+        <Link
+          to="/eventos?categoria=educacao"
+          className={emEducacao ? 'ativo' : ''}
+          aria-current={emEducacao ? 'page' : undefined}
+        >
+          Cursos e oficinas
+        </Link>
+        <Link to="/login" className="botao-secundario">Área do organizador</Link>
       </nav>
     </header>
   );
