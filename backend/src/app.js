@@ -24,9 +24,12 @@ app.get('/api/health', async (req, res) => {
 app.use('/api/categorias', require('./routes/categoriaRoutes'));
 app.use('/api/eventos', require('./routes/eventoRoutes'));
 
-// Cadastro, login e painel do organizador (v0.3.0). /api/admin entra na v0.4.0.
+// Cadastro, login e painel do organizador (v0.3.0).
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/painel', require('./routes/painelRoutes'));
+
+// Moderação do administrador (v0.4.0).
+app.use('/api/admin', require('./routes/adminRoutes'));
 
 // Rota inexistente.
 app.use((req, res) => {
