@@ -20,9 +20,13 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Catálogo público (v0.2.0). /api/auth e /api/admin entram nas próximas versões.
+// Catálogo público (v0.2.0).
 app.use('/api/categorias', require('./routes/categoriaRoutes'));
 app.use('/api/eventos', require('./routes/eventoRoutes'));
+
+// Cadastro, login e painel do organizador (v0.3.0). /api/admin entra na v0.4.0.
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/painel', require('./routes/painelRoutes'));
 
 // Rota inexistente.
 app.use((req, res) => {
@@ -31,6 +35,10 @@ app.use((req, res) => {
 
 // Erro inesperado: registra no terminal e devolve mensagem genérica (sem expor detalhes do banco).
 app.use((erro, req, res, next) => {
+  // JSON malformado no corpo da requisição.
+  if (erro.type === 'entity.parse.failed') {
+    return res.status(400).json({ mensagem: 'Dados enviados em formato inválido.' });
+  }
   console.error(erro);
   res.status(500).json({ mensagem: 'Erro interno. Tente novamente em instantes.' });
 });
