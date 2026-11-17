@@ -162,3 +162,132 @@ h1, h2, h3 { line-height: 1.25; }
 @media (max-width: 480px) {
   .busca-linha { flex-direction: column; }
 }
+
+/* ---------- Login, painel e moderação (v0.3.0 / v0.4.0) ---------- */
+.texto-suave { color: var(--cor-texto-suave); margin: 4px 0 0; }
+
+.botao-secundario {
+  display: inline-block; padding: 9px 16px; border-radius: var(--raio); cursor: pointer;
+  border: 1px solid var(--cor-borda); background: var(--cor-primaria-clara);
+  color: var(--cor-primaria); font: inherit; font-weight: 600; text-decoration: none;
+}
+.botao-secundario:hover { filter: brightness(.97); }
+.cabecalho nav a.botao-secundario.ativo { background: var(--cor-primaria); color: #fff; }
+.cabecalho nav .botao-texto { color: var(--cor-texto-suave); text-decoration: none; }
+.botao-largo { width: 100%; }
+.botao-sem-margem { margin-top: 0; }
+.botao:disabled, .botao-perigo:disabled { opacity: .55; cursor: not-allowed; }
+.botao-perigo {
+  padding: 8px 14px; border: 0; border-radius: var(--raio); cursor: pointer;
+  background: #9a3b32; color: #fff; font: inherit; font-weight: 600;
+}
+.botao-texto-perigo { color: #9a3b32; }
+
+/* Formulários em cartão (login, cadastro, perfil) */
+.cartao-form {
+  max-width: 440px; margin: 0 auto; padding: 28px 24px;
+  background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: var(--raio);
+}
+.cartao-form-largo { max-width: 640px; }
+.cartao-form h1 { margin: 0; font-size: 1.6rem; }
+.cartao-form form, .form-evento form { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+.campo textarea {
+  width: 100%; padding: 9px 10px; font: inherit; color: inherit; resize: vertical;
+  background: var(--cor-fundo); border: 1px solid var(--cor-borda); border-radius: 8px;
+}
+.campo-dica { color: var(--cor-texto-suave); font-size: .82rem; }
+.campo-erro { color: #9a3b32; font-size: .85rem; font-weight: 600; }
+.campo-com-erro input, .campo-com-erro select, .campo-com-erro textarea { border-color: #c98a82; background: #fdf6f5; }
+.aviso-lgpd {
+  margin: 0; padding: 10px 12px; font-size: .85rem; color: var(--cor-texto-suave);
+  background: var(--cor-fundo); border-radius: 8px;
+}
+.rodape-form { margin: 18px 0 0; text-align: center; font-size: .92rem; }
+
+.aviso-form { margin: 16px 0; padding: 12px 14px; border-radius: var(--raio); border: 1px solid; }
+.aviso-form.aviso-erro { color: #9a3b32; border-color: #e6c3be; background: #fbf1ef; }
+.aviso-sucesso { color: #2f5f47; border-color: #c4dccd; background: #eef6f1; }
+.aviso-atencao { color: #7a5a22; border-color: #ead9b8; background: #fbf5e9; }
+
+/* Formulário de evento */
+.form-evento { max-width: 760px; margin: 0 auto; }
+.form-evento fieldset {
+  margin: 0; padding: 18px; display: flex; flex-direction: column; gap: 14px;
+  background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: var(--raio);
+}
+.form-evento legend { padding: 0 6px; font-weight: 700; }
+.grade-campos { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.form-botoes { display: flex; justify-content: flex-end; align-items: center; gap: 16px; flex-wrap: wrap; }
+.form-botoes .botao { margin-top: 0; }
+
+/* Etiquetas de status (RF10) */
+.status-etiqueta {
+  display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .78rem; font-weight: 700;
+}
+.status-pendente  { background: #fbf0dc; color: #7a5a22; }
+.status-aprovado  { background: #e3f1e8; color: #2f5f47; }
+.status-rejeitado { background: #f8e3e0; color: #8a3229; }
+
+/* Painel */
+.painel-topo { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end; }
+.painel-topo .titulo-pagina { margin-bottom: 0; }
+.painel-acoes { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.painel-acoes .botao { margin-top: 0; }
+.resumo { display: grid; gap: 12px; margin: 20px 0; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+.resumo-item {
+  display: flex; flex-direction: column; padding: 14px 16px;
+  background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: var(--raio);
+  border-left: 4px solid var(--cor-primaria);
+}
+.resumo-item strong { font-size: 1.6rem; }
+.resumo-item span { color: var(--cor-texto-suave); font-size: .88rem; }
+.resumo-aprovado { border-left-color: #3f7a5c; }
+.resumo-pendente { border-left-color: #b7863b; }
+.resumo-rejeitado { border-left-color: #9a3b32; }
+
+.lista-painel { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.item-painel {
+  display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: flex-start;
+  padding: 16px; background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: var(--raio);
+}
+.item-painel-info { flex: 1 1 320px; min-width: 0; }
+.item-painel-titulo { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.item-painel-titulo h2 { margin: 0; font-size: 1.1rem; }
+.item-painel-acoes { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.nota-status { margin: 8px 0 0; font-size: .88rem; color: #7a5a22; }
+.motivo-rejeicao {
+  margin: 10px 0 0; padding: 10px 12px; border-radius: 8px;
+  background: #fbf1ef; color: #6e2a23; border: 1px solid #e6c3be;
+}
+.confirmar-exclusao { display: inline-flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: .92rem; }
+
+/* Perfil: prévia */
+.previa-organizador { margin-top: 24px; }
+
+/* Moderação */
+.abas { display: flex; gap: 6px; margin: 20px 0 8px; border-bottom: 1px solid var(--cor-borda); overflow-x: auto; }
+.aba {
+  padding: 10px 14px; border: 0; background: none; cursor: pointer; font: inherit;
+  color: var(--cor-texto-suave); border-bottom: 3px solid transparent; white-space: nowrap;
+}
+.aba-ativa { color: var(--cor-primaria); font-weight: 700; border-bottom-color: var(--cor-primaria); }
+.contador {
+  display: inline-block; min-width: 22px; margin-left: 4px; padding: 0 6px; border-radius: 999px;
+  background: var(--cor-primaria-clara); color: var(--cor-primaria); font-size: .78rem; text-align: center;
+}
+.detalhes-moderacao { margin-top: 10px; }
+.detalhes-largo { grid-column: 1 / -1; }
+.caixa-rejeicao {
+  display: flex; flex-direction: column; gap: 10px; margin-top: 12px; padding: 14px;
+  background: #fdf7f6; border: 1px solid #e6c3be; border-radius: var(--raio);
+}
+.caixa-rejeicao label { font-weight: 700; }
+.caixa-rejeicao textarea {
+  width: 100%; padding: 9px 10px; font: inherit; border: 1px solid var(--cor-borda); border-radius: 8px;
+}
+.sugestoes { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  padding: 5px 10px; border-radius: 999px; cursor: pointer; font: inherit; font-size: .82rem;
+  background: var(--cor-superficie); border: 1px solid var(--cor-borda); color: var(--cor-texto);
+}
+.chip:hover { border-color: var(--cor-primaria); color: var(--cor-primaria); }
