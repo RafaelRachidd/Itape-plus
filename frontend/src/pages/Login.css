@@ -1,0 +1,12 @@
+/* Login reutiliza as classes da tela de Cadastro para manter a identidade Stitch. */
+.login-page .cad-intro {
+  background: radial-gradient(circle at 88% 10%, #e0b39a 0, transparent 33%),
+              linear-gradient(145deg, #476553 0%, #739681 60%, #c1d7c3 100%);
+}
+.login-page .cad-login-nota a { color:#8d4d32; text-decoration:none; font-weight:700; }
+.login-page .cad-login-nota a:hover { text-decoration:underline; }
+.login-acoes { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:18px; }
+.login-acoes button { border:1px solid #aac5af; background:#fff; color:#355b43;
+  border-radius:8px; padding:9px 14px; cursor:pointer; font:inherit; font-size:12px; font-weight:700; }
+.login-acoes button:hover { background:#f4f8f4; }
+.login-page :is(input,button,a):focus-visible { outline:2px solid #8d4d32; outline-offset:2px; }

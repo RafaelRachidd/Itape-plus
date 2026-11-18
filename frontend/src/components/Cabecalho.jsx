@@ -26,7 +26,7 @@ export default function Cabecalho() {
 
         <nav id="itape-menu" className={'itape-header-nav' + (menuAberto ? ' aberto' : '')} aria-label="Menu principal">
           <NavLink to="/eventos" onClick={fecharMenu}>Eventos</NavLink>
-          <NavLink to="/eventos?visualizacao=calendario" onClick={fecharMenu}>Calendário</NavLink>
+           <NavLink to="/calendario" onClick={fecharMenu}>Calendário</NavLink>
           <NavLink to="/cadastro" className="itape-organizar" onClick={fecharMenu}>＋ Criar evento</NavLink>
           <NavLink to="/login" onClick={fecharMenu}>Minha conta</NavLink>
         </nav>
