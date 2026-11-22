@@ -1,7 +1,7 @@
 
 require('dotenv').config();
 
-const db = require('../src/config/firebase');
+const { db } = require('../src/config/firebase');
 
 const categorias = [
   { nome: 'Música', slug: 'musica' },

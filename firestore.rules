@@ -1,0 +1,11 @@
+rules_version = '2';
+// Regras do Firestore do Itape +.
+// Todo acesso aos dados passa pela API (firebase-admin), que ignora estas regras.
+// Por isso o navegador não lê nem grava nada direto no banco.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{documento=**} {
+      allow read, write: if false;
+    }
+  }
+}

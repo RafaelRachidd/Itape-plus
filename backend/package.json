@@ -1,27 +1,23 @@
 {
   "name": "itape-plus-backend",
   "version": "1.0.0",
-  "description": "API REST do Itape + (Node.js + Express + PostgreSQL)",
+  "description": "API REST do Itape + (Node.js + Express + Firebase)",
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "db:schema": "node scripts/executar-sql.js database/schema.sql",
-    "db:seed": "node scripts/executar-sql.js database/seed.sql && node scripts/criar-admin.js",
-    "db:reset": "npm run db:schema && npm run db:seed"
+    "categorias": "node scripts/popular-categorias.js",
+    "admin": "node scripts/definir-admin.js"
   },
   "author": "Equipe Itape +",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^18.0.9",
     "express": "^5.3.0",
     "express-validator": "^7.3.2",
     "firebase-admin": "^14.5.0",
-    "helmet": "^8.3.0",
-    "jsonwebtoken": "^9.0.3",
-    "pg": "^8.23.1"
+    "helmet": "^8.3.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
