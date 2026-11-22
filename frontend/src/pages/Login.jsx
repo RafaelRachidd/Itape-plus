@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { signInWithEmailAndPassword, reload, signOut } from 'firebase/auth';
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { sendEmailVerification, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
+import { areaDoPerfil, useAuth } from '../contexto/AuthContext';
 import './Cadastro.css';
 import './Login.css';
 
@@ -16,51 +17,63 @@ const mensagensErro = {
 };
 
 export default function Login() {
+  const { usuario, carregando, entrar } = useAuth();
+  const navegar = useNavigate();
+  const [parametros] = useSearchParams();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [entrando, setEntrando] = useState(false);
   const [erro, setErro] = useState('');
-  const [usuario, setUsuario] = useState(null);
+  const [naoVerificado, setNaoVerificado] = useState(false);
+  const [reenvio, setReenvio] = useState('');
 
-  async function entrar(evento) {
+  // Volta para a página protegida que pediu o login, se for do perfil certo.
+  const destino = (perfil) => {
+    const voltar = parametros.get('voltar');
+    const area = areaDoPerfil(perfil);
+    return voltar && voltar.startsWith(area) ? voltar : area;
+  };
+
+  // Quem já está logado vai direto para a sua área.
+  if (!carregando && usuario && !entrando) {
+    return <Navigate to={destino(usuario.perfil)} replace />;
+  }
+
+  async function aoEntrar(evento) {
     evento.preventDefault();
     if (entrando) return;
     setErro('');
+    setReenvio('');
+    setNaoVerificado(false);
     setEntrando(true);
 
     try {
-      const credencial = await signInWithEmailAndPassword(auth, email.trim(), senha);
-      await reload(credencial.user);
-
-      // Bloqueio de interface nesta etapa. O backend deverá validar o token
-      // e email_verified antes de permitir ações protegidas de verdade.
-      if (!credencial.user.emailVerified) {
-        await signOut(auth);
-        setErro('Verifique seu e-mail antes de entrar. Abra a mensagem de confirmação enviada no cadastro, inclusive a pasta de spam.');
-        return;
-      }
-
-      setUsuario({
-        nome: credencial.user.displayName || 'Organizador',
-        email: credencial.user.email,
-      });
+      const perfil = await entrar(email.trim(), senha);
       setSenha('');
+      navegar(destino(perfil.perfil), { replace: true });
     } catch (falha) {
-      setErro(mensagensErro[falha.code] || 'Não foi possível entrar. Tente novamente.');
+      if (falha.code === 'itape/email-nao-verificado') {
+        setNaoVerificado(true);
+        setErro('Verifique seu e-mail antes de entrar. Abra a mensagem de confirmação enviada no cadastro, inclusive a pasta de spam.');
+      } else {
+        if (auth.currentUser) await signOut(auth).catch(() => {});
+        setErro(mensagensErro[falha.code] || falha.message || 'Não foi possível entrar. Tente novamente.');
+      }
     } finally {
       setEntrando(false);
     }
   }
 
-  async function sair() {
+  async function reenviarVerificacao() {
     try {
-      await signOut(auth);
-      setUsuario(null);
-      setSenha('');
-      setErro('');
+      if (auth.currentUser) await sendEmailVerification(auth.currentUser);
+      setReenvio('Enviamos um novo e-mail de verificação. Depois de confirmar, entre novamente.');
     } catch {
-      setErro('Não foi possível encerrar a sessão. Tente novamente.');
+      setReenvio('Não foi possível reenviar agora. Aguarde alguns minutos e tente de novo.');
+    } finally {
+      setNaoVerificado(false);
+      await signOut(auth).catch(() => {});
     }
   }
 
@@ -83,43 +96,34 @@ export default function Login() {
           <h2 id="login-form-titulo">Entrar na minha conta</h2>
           <p className="cad-subtitulo">Use o e-mail e a senha cadastrados. A verificação do e-mail é necessária para entrar.</p>
 
-          {usuario ? (
-            <div className="cad-feedback cad-sucesso login-sucesso" role="status">
-              <strong>Login realizado!</strong>
-              <p>Bem-vindo(a), {usuario.nome}.</p>
-              <p>Conta: {usuario.email}</p>
-              <p>O painel e a publicação de eventos serão implementados na próxima etapa.</p>
-              <div className="login-acoes">
-                <Link to="/eventos">Explorar eventos →</Link>
-                <button type="button" onClick={sair}>Sair da conta</button>
-              </div>
-            </div>
-          ) : (
-            <form onSubmit={entrar} className="cad-formulario">
-              <label htmlFor="login-email">E-mail</label>
-              <input id="login-email" type="email" autoComplete="email" required maxLength={150}
-                value={email} onChange={(e) => setEmail(e.target.value)}
-                placeholder="voce@exemplo.com" />
+          <form onSubmit={aoEntrar} className="cad-formulario">
+            <label htmlFor="login-email">E-mail</label>
+            <input id="login-email" type="email" autoComplete="email" required maxLength={150}
+              value={email} onChange={(e) => setEmail(e.target.value)}
+              placeholder="voce@exemplo.com" />
 
-              <label htmlFor="login-senha">Senha</label>
-              <div className="cad-campo-senha">
-                <input id="login-senha" type={mostrarSenha ? 'text' : 'password'}
-                  autoComplete="current-password" required value={senha}
-                  onChange={(e) => setSenha(e.target.value)} placeholder="Sua senha" />
-                <button type="button" onClick={() => setMostrarSenha((valor) => !valor)}
-                  aria-label={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}>
-                  {mostrarSenha ? 'Ocultar' : 'Mostrar'}
-                </button>
-              </div>
-
-              {erro && <p className="cad-feedback cad-erro" role="alert">{erro}</p>}
-
-              <button type="submit" className="cad-botao" disabled={entrando}>
-                {entrando ? 'Entrando…' : 'Entrar na minha conta →'}
+            <label htmlFor="login-senha">Senha</label>
+            <div className="cad-campo-senha">
+              <input id="login-senha" type={mostrarSenha ? 'text' : 'password'}
+                autoComplete="current-password" required value={senha}
+                onChange={(e) => setSenha(e.target.value)} placeholder="Sua senha" />
+              <button type="button" onClick={() => setMostrarSenha((valor) => !valor)}
+                aria-label={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}>
+                {mostrarSenha ? 'Ocultar' : 'Mostrar'}
               </button>
-              <p className="cad-observacao">O login usa Firebase Authentication. O perfil de organizador e as permissões do servidor serão implementados separadamente.</p>
-            </form>
-          )}
+            </div>
+
+            {erro && <p className="cad-feedback cad-erro" role="alert">{erro}</p>}
+            {naoVerificado && (
+              <button type="button" className="login-reenviar" onClick={reenviarVerificacao}>Reenviar e-mail de verificação</button>
+            )}
+            {reenvio && <p className="cad-feedback cad-sucesso" role="status">{reenvio}</p>}
+
+            <button type="submit" className="cad-botao" disabled={entrando}>
+              {entrando ? 'Entrando…' : 'Entrar na minha conta →'}
+            </button>
+            <p className="cad-observacao">Organizadores vão para o painel de eventos; a equipe de moderação, para a área de análise.</p>
+          </form>
 
           <div className="cad-login-nota">
             Ainda não tem conta? <Link to="/cadastro">Cadastre-se gratuitamente</Link>

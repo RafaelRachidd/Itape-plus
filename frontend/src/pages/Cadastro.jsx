@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  signOut,
   updateProfile,
 } from 'firebase/auth';
 import { auth } from '../firebase';
+import { areaDoPerfil, useAuth } from '../contexto/AuthContext';
 import './Cadastro.css';
 
 const mensagensErro = {
@@ -18,6 +20,7 @@ const mensagensErro = {
 };
 
 export default function Cadastro() {
+  const { usuario } = useAuth();
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -26,6 +29,9 @@ export default function Cadastro() {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
+
+  // Quem já está logado não precisa criar outra conta.
+  if (usuario) return <Navigate to={areaDoPerfil(usuario.perfil)} replace />;
 
   async function cadastrar(evento) {
     evento.preventDefault();
@@ -47,8 +53,8 @@ export default function Cadastro() {
 
     setEnviando(true);
     try {
-      // Esta etapa cria SOMENTE a conta no Firebase Authentication.
-      // O perfil de organizador e as permissões serão definidos pelo backend em etapa futura.
+      // Cria a conta no Firebase Authentication. O perfil de organizador é criado
+      // pela API no primeiro login, depois que o e-mail for verificado.
       const credencial = await createUserWithEmailAndPassword(auth, email.trim(), senha);
       try {
         await updateProfile(credencial.user, { displayName: nome.trim() });
@@ -64,9 +70,12 @@ export default function Cadastro() {
         console.warn('Conta criada, mas o e-mail de verificação não pôde ser enviado.', falhaEmail);
       }
 
+      // O Firebase deixa a conta logada após o cadastro; saímos até o e-mail ser confirmado.
+      await signOut(auth).catch(() => {});
+
       setSucesso(emailEnviado
         ? 'Conta criada com sucesso! Confira sua caixa de entrada para verificar o e-mail.'
-        : 'Conta criada com sucesso! Não foi possível enviar a verificação por e-mail agora.');
+        : 'Conta criada com sucesso! Não foi possível enviar a verificação por e-mail agora; tente pelo login.');
       setSenha('');
       setConfirmacao('');
     } catch (falha) {
@@ -83,7 +92,7 @@ export default function Cadastro() {
         <div className="cad-intro-texto">
           <span className="cad-simbolo" aria-hidden="true">✳</span>
           <h1 id="cad-intro-titulo">Faça parte da cena cultural.</h1>
-          <p>Crie sua conta para, em breve, cadastrar e acompanhar seus eventos na plataforma cultural de Itapetininga e região.</p>
+          <p>Crie sua conta para cadastrar e acompanhar seus eventos na plataforma cultural de Itapetininga e região.</p>
           <div className="cad-traco" aria-hidden="true" />
           <span className="cad-rodape-intro">Arte, encontros e novas histórias começam aqui.</span>
         </div>
@@ -93,14 +102,14 @@ export default function Cadastro() {
         <div className="cad-form-card">
           <p className="cad-etapa">ÁREA DO ORGANIZADOR</p>
           <h2 id="cad-form-titulo">Criar minha conta</h2>
-          <p className="cad-subtitulo">Informe seus dados para começar. O acesso ao painel de organizadores será liberado nas próximas etapas.</p>
+          <p className="cad-subtitulo">Informe seus dados para começar. Depois de confirmar o e-mail, você já pode cadastrar eventos.</p>
 
           {sucesso ? (
             <div className="cad-feedback cad-sucesso" role="status">
               <strong>Cadastro realizado!</strong>
               <p>{sucesso}</p>
-              <p>O painel de organizadores ainda está em desenvolvimento.</p>
-              <Link to="/eventos">Explorar eventos →</Link>
+              <p>Depois de confirmar, entre na sua conta para acessar o painel do organizador.</p>
+              <Link to="/login">Ir para o login →</Link>
             </div>
           ) : (
             <form onSubmit={cadastrar} className="cad-formulario">
@@ -131,7 +140,7 @@ export default function Cadastro() {
               <button type="submit" className="cad-botao" disabled={enviando}>
                 {enviando ? 'Criando conta…' : 'Criar conta gratuita →'}
               </button>
-              <p className="cad-observacao">O cadastro cria uma conta no Firebase Authentication. O gerenciamento de eventos será implementado depois.</p>
+              <p className="cad-observacao">Toda conta nova é de organizador. Os eventos passam pela moderação antes de aparecer no site.</p>
             </form>
           )}
           <div className="cad-login-nota">

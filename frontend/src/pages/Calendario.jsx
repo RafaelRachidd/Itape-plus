@@ -97,11 +97,14 @@ function miniatura(evento) {
 function EventoDia({ evento }) {
   const categoria = infoCategoria(evento.categoriaId);
   const imagem = miniatura(evento);
+  const [imagemFalhou, setImagemFalhou] = useState(false);
 
   return (
     <article className="cal-evento">
       <div className="cal-evento-imagem">
-        {imagem ? <img src={imagem} alt="" loading="lazy" /> : <span aria-hidden="true">✳</span>}
+        {imagem && !imagemFalhou
+          ? <img src={imagem} alt="" loading="lazy" onError={() => setImagemFalhou(true)} />
+          : <span aria-hidden="true">✳</span>}
       </div>
       <div className="cal-evento-corpo">
         <div className="cal-evento-info">

@@ -81,12 +81,14 @@ function CartaoEvento({ evento }) {
   const data = evento.dataInicio ? new Date(evento.dataInicio) : null;
   const dataValida = data && !Number.isNaN(data.getTime());
   const imagem = evento.imagemUrl || evento.imagem_url;
+  // RF12: se a imagem não carregar, mostra a capa padrão.
+  const [imagemFalhou, setImagemFalhou] = useState(false);
 
   return (
     <article className="ev-card">
       <div className="ev-card-cover">
-        {imagem ? (
-          <img src={imagem} alt={`Imagem do evento ${evento.titulo}`} loading="lazy" />
+        {imagem && !imagemFalhou ? (
+          <img src={imagem} alt={`Imagem do evento ${evento.titulo}`} loading="lazy" onError={() => setImagemFalhou(true)} />
         ) : (
           <div className="ev-cover-placeholder" aria-label="Evento sem imagem cadastrada">
             <span aria-hidden="true">✦</span><strong>Itape +</strong><small>Cultura da nossa região</small>

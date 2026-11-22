@@ -1,10 +1,20 @@
 import { useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexto/AuthContext';
 import '../pages/Inicio.css';
 
 export default function Cabecalho() {
   const [menuAberto, setMenuAberto] = useState(false);
   const fecharMenu = () => setMenuAberto(false);
+  const { usuario, sair } = useAuth();
+  const navegar = useNavigate();
+
+  // Vai para o início antes de sair, para a página protegida não pedir login de novo.
+  async function aoSair() {
+    fecharMenu();
+    navegar('/');
+    await sair();
+  }
 
   return (
     <header className="itape-header">
@@ -26,9 +36,20 @@ export default function Cabecalho() {
 
         <nav id="itape-menu" className={'itape-header-nav' + (menuAberto ? ' aberto' : '')} aria-label="Menu principal">
           <NavLink to="/eventos" onClick={fecharMenu}>Eventos</NavLink>
-           <NavLink to="/calendario" onClick={fecharMenu}>Calendário</NavLink>
-          <NavLink to="/cadastro" className="itape-organizar" onClick={fecharMenu}>＋ Criar evento</NavLink>
-          <NavLink to="/login" onClick={fecharMenu}>Minha conta</NavLink>
+          <NavLink to="/calendario" onClick={fecharMenu}>Calendário</NavLink>
+          {usuario?.perfil === 'administrador' ? (
+            <NavLink to="/admin" className="itape-organizar" onClick={fecharMenu}>Moderação</NavLink>
+          ) : (
+            <NavLink to={usuario ? '/painel/novo' : '/cadastro'} className="itape-organizar" onClick={fecharMenu}>＋ Criar evento</NavLink>
+          )}
+          {usuario ? (
+            <>
+              {usuario.perfil === 'organizador' && <NavLink to="/painel" end onClick={fecharMenu}>Meu painel</NavLink>}
+              <button type="button" className="itape-sair" onClick={aoSair}>Sair</button>
+            </>
+          ) : (
+            <NavLink to="/login" onClick={fecharMenu}>Minha conta</NavLink>
+          )}
         </nav>
       </div>
     </header>

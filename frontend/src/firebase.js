@@ -1,6 +1,7 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+// Configuração pública do Firebase (apenas Authentication no navegador).
+// Os dados do Firestore são lidos e gravados somente pela API.
+import { initializeApp } from 'firebase/app';
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBEZLFjMJcxrC0Xp3dwm04qCIG7Q1il6Ck",
@@ -14,4 +15,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+
+// Opcional, só para testes locais com o Firebase Emulator Suite.
+if (import.meta.env.VITE_FIREBASE_AUTH_EMULATOR) {
+  connectAuthEmulator(auth, import.meta.env.VITE_FIREBASE_AUTH_EMULATOR, { disableWarnings: true });
+}

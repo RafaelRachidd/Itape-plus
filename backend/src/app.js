@@ -27,7 +27,6 @@ app.use((req, res) => {
 });
 
 // Erros inesperados: registra no terminal e responde sem expor detalhes internos.
-// eslint-disable-next-line no-unused-vars
 app.use((erro, req, res, next) => {
   if (erro.type === 'entity.parse.failed') {
     return res.status(400).json({ mensagem: 'Dados enviados em formato inválido.' });

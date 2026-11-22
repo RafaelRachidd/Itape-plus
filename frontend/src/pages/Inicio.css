@@ -21,6 +21,8 @@ body:has(.itape-inicio) .rodape { background:#f6f3f2; color:#86736c; border-colo
 .itape-header-nav a { font-size:13px; text-decoration:none; color:#3b3835; font-weight:600; }
 .itape-header-nav a.active:not(.itape-organizar) { color:var(--itape-terracota); }
 .itape-header-nav a.itape-organizar { background:#c9ebd4; color:#304d3c; border-radius:999px; padding:11px 16px; }
+.itape-sair { border:0; background:none; padding:0; font:inherit; font-size:13px; font-weight:600; color:#8d4d32; cursor:pointer; }
+.itape-sair:hover { text-decoration:underline; }
 .itape-menu-toggle { display:none; background:transparent; border:1px solid var(--itape-borda); border-radius:12px; padding:9px 12px; font-weight:600; }
 
 /* Conteúdo da home */
@@ -29,6 +31,7 @@ body:has(.itape-inicio) .rodape { background:#f6f3f2; color:#86736c; border-colo
 .itape-prototype-notice span:first-child { font-weight:700; }
 .itape-hero { min-height:450px; border-radius:18px; overflow:hidden; background-size:cover; background-position:center; box-shadow:0 12px 24px rgba(38,30,22,.13); color:#fff; display:grid; grid-template-columns:minmax(0,1fr) 280px; align-items:end; gap:40px; padding:52px 42px 38px; transition:background-image .2s ease; }
 .itape-hero-copy { max-width:650px; }
+.itape-hero-unico { grid-template-columns:minmax(0,1fr); background-color:#5b4a40; }
 .itape-hero-badge { display:inline-block; background:rgba(141,77,50,.94); border-radius:999px; padding:9px 14px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
 .itape-hero-eyebrow { margin-top:12px; font-size:13px; font-weight:600; opacity:.9; }
 .itape-hero h1 { font-family:Newsreader,Georgia,serif; font-size:clamp(35px,4.2vw,62px); line-height:1.03; letter-spacing:-.022em; margin:12px 0; text-shadow:0 1px 5px #0005; font-weight:600; }
@@ -69,6 +72,10 @@ body:has(.itape-inicio) .rodape { background:#f6f3f2; color:#86736c; border-colo
 .itape-event-card { background:#fff; border:1px solid var(--itape-borda); border-radius:14px; overflow:hidden; box-shadow:0 2px 7px #0000000a; min-width:0; }
 .itape-event-card:hover { box-shadow:0 8px 20px #4e403514; transform:translateY(-2px); }
 .itape-event-image { display:block; position:relative; width:100%; aspect-ratio:16/9; background-size:cover; background-position:center; background-color:#ddd3ca; }
+.itape-event-foto { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+.itape-hero-chamada { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.itape-agenda-vazia { text-align:center; background:#fff; border:1px dashed #dccfc5; border-radius:16px; margin-top:28px; padding:40px 20px; }
+.itape-agenda-vazia p { color:#6b625b; font-size:14px; }
 .itape-event-tag { position:absolute; left:12px; top:12px; color:#4d321e; background:#ffefe5e8; border-radius:999px; font-size:11px; font-weight:700; padding:6px 10px; }
 .itape-event-body { padding:14px 15px 15px; }
 .itape-event-city { color:#8d4d32; font-size:10px; text-transform:uppercase; letter-spacing:.04em; font-weight:700; }
@@ -98,6 +105,7 @@ body:has(.itape-inicio) .rodape { background:#f6f3f2; color:#86736c; border-colo
   .itape-header-nav { display:none; order:4; flex-basis:100%; padding:12px 0; flex-direction:column; align-items:stretch; gap:4px; }
   .itape-header-nav.aberto { display:flex; }
   .itape-header-nav a { padding:10px 12px; }
+  .itape-sair { text-align:left; padding:10px 12px; }
   .itape-hero { grid-template-columns:1fr; padding:30px 24px; min-height:540px; }
   .itape-hero-switcher { display:none; }
   .itape-event-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
