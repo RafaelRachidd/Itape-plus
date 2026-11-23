@@ -1,70 +1,58 @@
 # Itape + — configuração local com Firebase
 
-Esta documentação vale para a branch `versao-firebase` e **não altera o projeto Neon original**.
+Passo a passo para rodar o projeto no Windows (CMD).
 
 ## Pré-requisitos
 
-- Node.js 22 ou superior (verifique com `node -v`).
-- Projeto Firebase criado, com Firestore Standard e Firebase Authentication (E-mail/senha).
-- Aplicativo Web registrado para o frontend.
-- No VS Code, selecione a branch `versao-firebase` e obtenha as alterações do GitHub.
+- Node.js 20 ou superior (`node -v`).
+- Acesso ao projeto `itape-plus` no Firebase (Firestore e Authentication por e-mail e senha).
+- A chave da conta de serviço `serviceAccountKey.json`, recebida por mensagem privada
+  ou gerada em Firebase › Configurações do projeto › Contas de serviço › Gerar nova chave privada.
 
-## 1. Obter uma credencial administrativa para desenvolvimento local
+**Nunca envie a chave nem o `.env` ao GitHub.** Os dois estão no `.gitignore`.
 
-No Firebase Console: Configurações do projeto (engrenagem) → Contas de serviço →
-Firebase Admin SDK → Gerar nova chave privada. Salve o JSON baixado dentro de
-`backend/` e renomeie-o para `serviceAccountKey.json`.
-
-**Nunca compartilhe ou envie esse JSON ao GitHub.** O arquivo está no `.gitignore`.
-Para produção (Render), usaremos uma forma segura de fornecer credenciais como segredo,
-sem incluir arquivos privados no repositório.
-
-## 2. Configurar o backend
-
-No Prompt de Comando do Windows:
+## 1. Back-end
 
 ```cmd
-cd C:\Users\Fatec\Desktop\Itape-plus\backend
-npm install firebase-admin
+cd C:\caminho\Itape-plus\backend
+npm install
 copy .env.example .env
 ```
 
-Confira no `.env`:
-- `FIREBASE_PROJECT_ID=itape-plus` (ajuste caso seu ID seja outro)
-- `GOOGLE_APPLICATION_CREDENTIALS=./serviceAccountKey.json`
+Coloque o `serviceAccountKey.json` dentro de `backend\` e confira no `.env`:
 
-Depois:
+```
+FIREBASE_PROJECT_ID=itape-plus
+GOOGLE_APPLICATION_CREDENTIALS=./serviceAccountKey.json
+```
 
 ```cmd
+npm run categorias
 npm run dev
 ```
 
-Acesse `http://localhost:3000/api/health`.
-Se o Firestore estiver vazio, espere:
-```json
-{"status":"ok","banco":"conectado","categorias":0}
-```
+Teste em `http://localhost:3000/api/health`: deve aparecer `"banco": "conectado"` e `"categorias": 8`.
 
-**Não use `npm run db:reset` nesta versão**: são scripts antigos de PostgreSQL.
+## 2. Front-end
 
-## 3. Configurar o frontend
-
-Na pasta `frontend`, instale `firebase` e configure `src/firebase.js`
-com `initializeApp`, `getAuth` e `getFirestore`, utilizando os dados
-da configuração Web do seu projeto Firebase (não a chave privada Admin).
+Em outro CMD:
 
 ```cmd
-cd C:\Users\Fatec\Desktop\Itape-plus\frontend
-npm install firebase
-copy .env.example .env
+cd C:\caminho\Itape-plus\frontend
+npm install
 npm run dev
 ```
 
-Acesse `http://localhost:5173`. A tela inicial deve mostrar
-`API conectada: 0 categorias no banco.`.
+Acesse `http://localhost:5173`.
 
-## Próximas etapas
+## 3. Administrador
 
-Criar coleções `categorias`, `usuarios` e `eventos`; implementar
-as APIs, cadastro, login, controle de acesso e moderação. A autenticação
-estará habilitada no console, mas as telas e rotas ainda não existem.
+Crie a conta pelo site, confirme o e-mail e rode, dentro de `backend\`:
+
+```cmd
+npm run admin -- email@exemplo.com
+```
+
+## 4. Regras do Firestore
+
+No Firebase Console › Firestore › Regras, cole o conteúdo de `firestore.rules` e publique.
