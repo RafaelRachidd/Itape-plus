@@ -51,3 +51,8 @@ a:focus-visible { outline: 2px solid var(--cor-primaria); outline-offset: 2px; }
   text-align: center; padding: 20px 16px; font-size: 0.85rem;
   color: var(--cor-texto-suave); border-top: 1px solid var(--cor-borda);
 }
+
+/* Capa padrão (RF12) */
+.imagem-evento-padrao { display:grid; place-items:center; background:linear-gradient(140deg,#ae5e42 0%,#d98c6c 56%,#e9b5a1 100%); color:#fff; }
+.imagem-evento-padrao span { font-size:42px; opacity:.85; }
+

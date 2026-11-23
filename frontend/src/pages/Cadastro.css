@@ -1,0 +1,38 @@
+/* Cadastro: identidade do Stitch (Inter, Newsreader, creme e terracota). */
+body:has(.cad-page) { background: #fbf9f8; }
+main:has(.cad-page) { padding: 0; margin: 0; max-width: none; }
+.cad-page { min-height: 650px; display:grid; grid-template-columns: minmax(0, .93fr) minmax(0, 1.07fr); color:#2f2f2f; font-family:Inter,system-ui,sans-serif; }
+.cad-intro { background: radial-gradient(circle at 90% 14%,#f5c7b1 0,transparent 32%),linear-gradient(140deg,#ae5e42 0%,#d98c6c 56%,#e9b5a1 100%); padding: 34px clamp(25px,5vw,90px) 60px; color:#fff; display:flex; flex-direction:column; justify-content:space-between; }
+.cad-kicker { font-size:11px; font-weight:700; letter-spacing:.16em; }
+.cad-intro-texto { max-width:490px; margin:auto 0; }
+.cad-simbolo { display:inline-grid; place-items:center; background:#ffffff30; width:60px; height:60px; border-radius:17px; font-size:36px; margin-bottom:30px; }
+.cad-intro h1 { font-family:Newsreader,Georgia,serif; font-size:clamp(46px,5vw,76px); font-weight:500; line-height:1.04; letter-spacing:-.03em; margin:0 0 22px; }
+.cad-intro p { color:#fff4ee; font-size:15px; line-height:1.8; max-width:400px; }
+.cad-traco { height:1px; background:#ffffff66; max-width:260px; margin:36px 0 18px; }
+.cad-rodape-intro { font-size:12px; color:#fff3eb; }
+.cad-form-area { display:grid; place-items:center; padding:50px 24px; }
+.cad-form-card { width:100%; max-width:460px; }
+.cad-etapa { color:#476553; font-size:11px; font-weight:800; letter-spacing:.13em; margin:0 0 13px; }
+.cad-form-card h2 { font-family:Newsreader,Georgia,serif; font-size:clamp(38px,4vw,52px); font-weight:500; margin:0 0 10px; line-height:1.06; }
+.cad-subtitulo { font-size:13px; line-height:1.7; color:#756961; margin:0 0 28px; }
+.cad-formulario { display:flex; flex-direction:column; }
+.cad-formulario label { font-size:12px; font-weight:750; margin:0 0 7px; color:#443830; }
+.cad-formulario input { width:100%; min-width:0; padding:13px 15px; border:1px solid #e2d9d1; background:#fff; color:#2f2f2f; border-radius:10px; font:inherit; font-size:13px; margin:0 0 18px; }
+.cad-formulario input:focus { outline:2px solid #d98c6c; outline-offset:1px; }
+.cad-formulario input::placeholder { color:#aaa09a; }
+.cad-campo-senha { position:relative; }
+.cad-campo-senha input { padding-right:90px; }
+.cad-campo-senha button { border:0; background:none; color:#8d4d32; position:absolute; top:9px; right:10px; padding:6px; font-size:11px; font-weight:700; cursor:pointer; }
+.cad-botao { margin-top:7px; border:0; background:#8d4d32; color:#fff; padding:15px 20px; font:inherit; font-size:13px; font-weight:750; border-radius:10px; cursor:pointer; }
+.cad-botao:hover { background:#70371d; }
+.cad-botao:disabled { opacity:.6; cursor:wait; }
+.cad-observacao { text-align:center; font-size:11px; color:#84766d; line-height:1.5; margin:15px 0 5px; }
+.cad-feedback { border-radius:10px; padding:14px 16px; margin:4px 0 18px; line-height:1.6; font-size:13px; }
+.cad-erro { color:#8f302d; background:#fff0ed; border:1px solid #f1c8bf; }
+.cad-sucesso { background:#ecf4ed; color:#355b43; border:1px solid #cde0d0; }
+.cad-sucesso strong { font-size:16px; }
+.cad-sucesso p { margin:9px 0; }
+.cad-sucesso a { color:#355b43; font-weight:700; }
+.cad-login-nota { border-top:1px solid #e9e2dc; margin-top:24px; padding-top:20px; text-align:center; font-size:12px; color:#4e423b; }
+.cad-login-nota span { color:#8f7565; }
+@media (max-width:820px) { .cad-page { grid-template-columns:1fr; } .cad-intro { min-height:300px; padding:24px; } .cad-intro-texto { padding:28px 0; } .cad-intro h1 { font-size:44px; } .cad-simbolo { display:none; } .cad-intro p { font-size:13px; } .cad-form-area { padding:36px 20px 55px; } }
