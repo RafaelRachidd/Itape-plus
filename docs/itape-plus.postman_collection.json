@@ -1,0 +1,754 @@
+{
+  "info": {
+    "_postman_id": "ca88e790-c229-437e-b3b0-5b1794051330",
+    "name": "Itape + API",
+    "description": "Coleção da API do Itape + (v1.0.0).\n\nVariáveis: baseUrl (API publicada ou http://localhost:3000/api), idToken (ID token do Firebase de quem está logado) e eventoId (preenchido ao criar um evento).\n\nComo obter o idToken: entre no site, aperte F12, abra a aba Rede (Network), recarregue a página e clique na requisição \"eu\". Copie o valor do cabeçalho Authorization sem a palavra Bearer. O token vale por 1 hora.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://itape-plus-api.onrender.com/api"
+    },
+    {
+      "key": "idToken",
+      "value": ""
+    },
+    {
+      "key": "eventoId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Público",
+      "item": [
+        {
+          "name": "Health (conexão com o Firestore)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('API conectada', () => pm.response.to.have.status(200));",
+                  "pm.test('banco conectado', () => pm.expect(pm.response.json().banco).to.eql('conectado'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Categorias",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categorias",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('lista categorias', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eventos aprovados (RF01)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('lista eventos', () => pm.response.to.have.status(200));",
+                  "pm.test('só aprovados', () => pm.response.json().forEach(e => pm.expect(e.status).to.eql('aprovado')));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detalhes de evento (RF02) – inexistente retorna 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eventos/nao-existe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "nao-existe"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('evento inexistente = 404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Conta (exige idToken)",
+      "item": [
+        {
+          "name": "Sem token retorna 401",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eu",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eu"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('sem login = 401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Meu perfil",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/eu",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eu"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('perfil', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar perfil público",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/eu",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eu"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nomePublico\": \"Coletivo Cultural\",\n  \"descricao\": \"Grupo de teste\",\n  \"contato\": \"@coletivo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('perfil atualizado', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Painel do organizador (exige idToken de organizador)",
+      "item": [
+        {
+          "name": "Formulário vazio retorna 400 com erros por campo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/painel/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "painel",
+                "eventos"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('validação', () => pm.response.to.have.status(400));",
+                  "pm.test('erros por campo', () => pm.expect(pm.response.json().erros.length).to.be.above(0));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Criar evento (RF06, nasce pendente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/painel/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "painel",
+                "eventos"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Sarau na Praça\",\n  \"categoriaId\": \"musica\",\n  \"descricao\": \"Noite de música e poesia com artistas locais.\",\n  \"dataInicio\": \"2026-12-12T19:00\",\n  \"localNome\": \"Praça Peixoto Gomide\",\n  \"endereco\": \"Praça Peixoto Gomide, Centro\",\n  \"cidade\": \"Itapetininga\",\n  \"gratuito\": true,\n  \"preco\": null,\n  \"imagemUrl\": \"\",\n  \"linkInscricao\": \"\",\n  \"programacao\": [\n    {\n      \"horario\": \"19:00\",\n      \"titulo\": \"Abertura\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('criado', () => pm.response.to.have.status(201));",
+                  "pm.test('pendente', () => pm.expect(pm.response.json().status).to.eql('pendente'));",
+                  "pm.collectionVariables.set('eventoId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Meus eventos (RF07)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/painel/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "painel",
+                "eventos"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('lista', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar evento (RF08, volta a pendente)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/painel/eventos/{{eventoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "painel",
+                "eventos",
+                "{{eventoId}}"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Sarau na Praça (editado)\",\n  \"categoriaId\": \"musica\",\n  \"descricao\": \"Noite de música e poesia com artistas locais.\",\n  \"dataInicio\": \"2026-12-12T19:00\",\n  \"localNome\": \"Praça Peixoto Gomide\",\n  \"endereco\": \"Praça Peixoto Gomide, Centro\",\n  \"cidade\": \"Itapetininga\",\n  \"gratuito\": true,\n  \"preco\": null,\n  \"imagemUrl\": \"\",\n  \"linkInscricao\": \"\",\n  \"programacao\": [\n    {\n      \"horario\": \"19:00\",\n      \"titulo\": \"Abertura\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('editado', () => pm.response.to.have.status(200));",
+                  "pm.test('pendente', () => pm.expect(pm.response.json().status).to.eql('pendente'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Excluir evento (RF08)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/painel/eventos/{{eventoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "painel",
+                "eventos",
+                "{{eventoId}}"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('excluído', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Moderação (exige idToken de administrador)",
+      "item": [
+        {
+          "name": "Resumo por status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/resumo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "resumo"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('resumo', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Fila de pendentes (RF09)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/eventos?status=pendente",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "eventos"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pendente"
+                }
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('fila', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Aprovar (RF10)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/eventos/{{eventoId}}/aprovar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "eventos",
+                "{{eventoId}}",
+                "aprovar"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('aprovado', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Rejeitar com motivo (RF10, RF11)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/eventos/{{eventoId}}/rejeitar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "eventos",
+                "{{eventoId}}",
+                "rejeitar"
+              ]
+            },
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"motivo\": \"Informe o endereço completo do evento.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('rejeitado', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Organizador no admin retorna 403",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/resumo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "resumo"
+              ]
+            },
+            "description": "Use o idToken de um organizador: a resposta deve ser 403.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{idToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('sem permissão = 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -6,6 +6,10 @@ Plataforma web que centraliza e divulga eventos culturais e educacionais de Itap
 
 Projeto final de Programação Web — FATEC Itapetininga, 2026.
 
+**Site publicado:** https://itape-plus.vercel.app · **API:** https://itape-plus-api.onrender.com/api/health
+
+No plano gratuito do Render, a API "dorme" sem uso: o primeiro acesso pode levar até 1 minuto.
+
 ## Tecnologias
 
 | Camada | Tecnologia |
@@ -91,6 +95,8 @@ npm run admin -- email@exemplo.com
 | PATCH | `/api/admin/eventos/:id/rejeitar` | administrador | Rejeita com motivo |
 
 As rotas protegidas recebem o ID token do Firebase no cabeçalho `Authorization: Bearer <token>`.
+
+A coleção do Postman com todas as rotas e testes automáticos está em [`docs/itape-plus.postman_collection.json`](docs/itape-plus.postman_collection.json).
 
 ## Equipe
 
