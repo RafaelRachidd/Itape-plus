@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
-import { sendEmailVerification, signOut } from 'firebase/auth';
+import { sendEmailVerification, sendPasswordResetEmail, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { areaDoPerfil, useAuth } from '../contexto/AuthContext';
 import './Cadastro.css';
@@ -27,6 +27,8 @@ export default function Login() {
   const [erro, setErro] = useState('');
   const [naoVerificado, setNaoVerificado] = useState(false);
   const [reenvio, setReenvio] = useState('');
+  const [recuperacao, setRecuperacao] = useState('');
+  const [enviandoLink, setEnviandoLink] = useState(false);
 
   // Volta para a página protegida que pediu o login, se for do perfil certo.
   const destino = (perfil) => {
@@ -77,6 +79,33 @@ export default function Login() {
     }
   }
 
+  // RF: recuperar a senha pelo e-mail de redefinição do Firebase Authentication.
+  async function recuperarSenha() {
+    if (enviandoLink) return;
+    setErro('');
+    setRecuperacao('');
+    const endereco = email.trim();
+    if (!endereco) {
+      setErro('Digite seu e-mail no campo acima para receber o link de nova senha.');
+      return;
+    }
+    setEnviandoLink(true);
+    try {
+      auth.languageCode = 'pt-BR';
+      await sendPasswordResetEmail(auth, endereco);
+      setRecuperacao('Se houver uma conta com este e-mail, enviamos um link para criar uma nova senha. Confira também a pasta de spam.');
+    } catch (falha) {
+      if (falha.code === 'auth/user-not-found') {
+        // Mesma resposta para não revelar quais e-mails têm conta.
+        setRecuperacao('Se houver uma conta com este e-mail, enviamos um link para criar uma nova senha. Confira também a pasta de spam.');
+      } else {
+        setErro(mensagensErro[falha.code] || 'Não foi possível enviar o link agora. Tente novamente em alguns minutos.');
+      }
+    } finally {
+      setEnviandoLink(false);
+    }
+  }
+
   return (
     <div className="cad-page login-page">
       <section className="cad-intro" aria-labelledby="login-intro-titulo">
@@ -112,12 +141,16 @@ export default function Login() {
                 {mostrarSenha ? 'Ocultar' : 'Mostrar'}
               </button>
             </div>
+            <button type="button" className="login-esqueci" onClick={recuperarSenha} disabled={enviandoLink}>
+              {enviandoLink ? 'Enviando link…' : 'Esqueci minha senha'}
+            </button>
 
             {erro && <p className="cad-feedback cad-erro" role="alert">{erro}</p>}
             {naoVerificado && (
               <button type="button" className="login-reenviar" onClick={reenviarVerificacao}>Reenviar e-mail de verificação</button>
             )}
             {reenvio && <p className="cad-feedback cad-sucesso" role="status">{reenvio}</p>}
+            {recuperacao && <p className="cad-feedback cad-sucesso" role="status">{recuperacao}</p>}
 
             <button type="submit" className="cad-botao" disabled={entrando}>
               {entrando ? 'Entrando…' : 'Entrar na minha conta →'}

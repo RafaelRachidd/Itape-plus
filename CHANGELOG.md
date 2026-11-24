@@ -3,6 +3,11 @@
 Todas as mudanças relevantes do Itape + são registradas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e versões em [SemVer](https://semver.org/lang/pt-BR/).
 
+## [1.1.0] - 2026-11-24
+
+### Adicionado
+- Recuperação de senha na tela de login ("Esqueci minha senha"), com o e-mail de redefinição do Firebase Authentication
+
 ## [1.0.0] - 2026-11-23
 
 Versão final entregue na disciplina de Programação Web (FATEC Itapetininga).
